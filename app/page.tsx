@@ -4,16 +4,25 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Icons } from "@/components/icons"
 
 export default function Home() {
   const [name, setName] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleConnect = () => {
+    setIsLoading(true)
     fetch(`/api/dispatch-agent?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phoneNumber)}`)
       .then(response => response.json())
-      .then(data => console.log('Agent dispatched:', data))
-      .catch(error => console.error('Error dispatching agent:', error))
+      .then(data => {
+        console.log('Agent dispatched:', data)
+        setIsLoading(false) 
+      })
+      .catch(error => {
+        console.error('Error dispatching agent:', error)
+        setIsLoading(false)
+      })
     console.log(`Connecting agent for: ${name} with phone: ${phoneNumber}`)
   }
 
@@ -37,8 +46,18 @@ export default function Home() {
               onChange={(e) => setPhoneNumber(e.target.value)}
               type="tel"
             />
-            <Button onClick={handleConnect}>
-              Go!
+            <Button 
+                onClick={handleConnect} 
+                disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  Dispatching agent...
+                </>
+              ) : (
+                'Go!'
+              )}
             </Button>
           </div>
         </CardContent>

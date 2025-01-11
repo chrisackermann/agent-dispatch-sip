@@ -22,14 +22,14 @@ export async function GET(req: NextRequest) {
         process.env.LIVEKIT_API_SECRET
     );
 
-    // create a dispatch request for an agent named "test-agent" to join "my-room"
+    // Create a dispatch request for an agent named "outbound-caller" to join a new LiveKit room
     const dispatch = await agentDispatchClient.createDispatch(roomName, agentName, {
       metadata: JSON.stringify({ name, phoneNumber }),
     });
-    console.log('created dispatch', dispatch);
+    console.log('Created dispatch', dispatch);
   
     const dispatches = await agentDispatchClient.listDispatch(roomName);
-    console.log(`there are ${dispatches.length} dispatches in ${roomName}`);
+    console.log(`There are ${dispatches.length} dispatches in ${roomName}`);
 
     return NextResponse.json(dispatches)
 }
